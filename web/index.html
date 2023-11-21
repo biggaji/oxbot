@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Welcomes new users and sends them a company onboarding document to help them fulfill their row succesfully"
+    />
+    <!-- <link rel="stylesheet" href="/style.css" type="text/css" /> -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>Oxbot - Home</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+      @font-face {
+        font-family: 'Lato';
+        src: url('./assets/fonts/Lato-Regular.ttf');
+        font-display: 'swap';
+      }
+
+      @font-face {
+        font-family: 'LatoLight';
+        src: url('./assets/fonts/Lato-Light.ttf');
+        font-display: 'swap';
+      }
+
+      @font-face {
+        font-family: 'LatoLightItalic';
+        src: url('./assets/fonts/Lato-LightItalic.ttf');
+        font-display: 'swap';
+      }
+
+      @font-face {
+        font-family: 'LatoBold';
+        src: url('./assets/fonts/Lato-Bold.ttf');
+        font-display: 'swap';
+      }
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-family: LatoLight;
+      }
+
+      body {
+        width: 100%;
+      }
+
+      #container {
+        padding: 1rem;
+        display: flex;
+        /* border: 1px solid red; */
+        max-width: 400px;
+        max-height: 70px;
+      }
+
+      #container > img {
+        width: 40px;
+        display: none;
+        height: 40px;
+      }
+
+      #container > #deet > #text {
+        font-family: LatoLight;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      #container > #deet {
+        /* display: flex; */
+        margin-left: 0.5rem;
+      }
+
+      #container > #deet > #bot_ids {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      #container > #deet > #bot_ids > #bot_id_name {
+        font-family: LatoBold;
+        font-size: 1.2rem;
+      }
+
+      #container > #deet > #bot_ids > #bot_label {
+        /* padding: 0.2px 1px; */
+        background-color: #e7e7e29d;
+        color: #a0a09d;
+        font-weight: 400;
+        margin-left: 0.3rem;
+        /* display: block; */
+        vertical-align: middle;
+        font-size: 0.7rem;
+        border-radius: 2.5px;
+      }
+
+      #container > #deet > #bot_ids > #timeStamp {
+        font-family: LatoLightItalic;
+        font-size: 0.7rem;
+        vertical-align: middle;
+        font-weight: 500;
+        margin-left: 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <img id="bot_image" alt="Bot icon" />
+      <div id="deet">
+        <div id="bot_ids">
+          <p id="bot_id_name"></p>
+          <span id="bot_label"></span>
+          <p id="timeStamp"></p>
+        </div>
+        <p id="text"></p>
+      </div>
+    </div>
+    <script>
+      const botSocket = io('http://localhost:3000', {
+        query: {
+          isBot: true,
+        },
+      });
+
+      const text = document.getElementById('text');
+      const timeStamp = document.getElementById('timeStamp');
+      const bot_name_el = document.getElementById('bot_id_name');
+      const bot_label = document.getElementById('bot_label');
+      const bot_img = document.getElementById('bot_image');
+      const wave_emo = '👋';
+
+      botSocket.on('account:signup', (payload) => {
+        bot_name_el.innerHTML = 'Alexabot';
+        bot_img.src = './assets/images/bot.png';
+        bot_img.style.display = 'block';
+        bot_label.innerHTML = 'BOT';
+        text.innerHTML = `${wave_emo} ${payload.username}, welcome to Amazona.`;
+        timeStamp.innerHTML = payload.createdAt;
+      });
+
+      // const notification = io('http://localhost:3000', {});
+    </script>
+  </body>
+</html>
