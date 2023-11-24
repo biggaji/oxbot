@@ -8,6 +8,32 @@
       content="Welcomes new users and sends them a company onboarding document to help them fulfill their row succesfully"
     />
     <!-- <link rel="stylesheet" href="/style.css" type="text/css" /> -->
+
+    <!-- Open Graph -->
+    <!-- <meta property="og:title" content="GitHub + Slack" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Bring your code to the conversations you care about with the GitHub and Slack integration."
+    />
+    <meta
+      property="og:image"
+      content="http://slack.github.com/static/img/og-image.png"
+    />
+    <meta property="og:url" content="http://slack.github.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@github" />
+    <meta name="twitter:creator" content="@github" />
+    <meta name="twitter:title" content="GitHub + Slack" />
+    <meta
+      name="twitter:description"
+      content="Bring your code to the conversations you care about with the GitHub and Slack integration."
+    />
+    <meta
+      name="twitter:image"
+      content="http://slack.github.com/static/img/og-image.png"
+    /> -->
+
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <title>Oxbot - Home</title>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
@@ -103,10 +129,21 @@
         font-weight: 500;
         margin-left: 0.3rem;
       }
+
+      #main_container {
+        display: flex;
+      }
+
+      #main_container > #vertical_divider {
+        width: 3px;
+        margin: 0 10px;
+        height: 100%;
+        background: #f70909 !important;
+      }
     </style>
   </head>
   <body>
-    <div id="container">
+    <!-- <div id="container">
       <img id="bot_image" alt="Bot icon" />
       <div id="deet">
         <div id="bot_ids">
@@ -117,30 +154,92 @@
         <p id="text"></p>
       </div>
     </div>
+
+     -->
+    <main id="main_container">
+      <section id="bot_info_container">
+        <section id="bot_profile_container">
+          <section id="bot_image_wrapper">
+            <img src="./assets/images/bot.png" alt="Bot image" />
+          </section>
+          <section id="bot_identity_wrapper">
+            <section id="bot_name_label">
+              <p id="bot_name">Reminder Bot</p>
+              <p id="bot_label">BOT</p>
+            </section>
+            <section id="bot_description">
+              <p id="bot_description_summary">
+                Empower Your Day with Personal Reminders: Seamlessly Stay on Top
+                of Your Schedule, Receive Timely Notifications, All in One
+                Place!
+              </p>
+            </section>
+          </section>
+        </section>
+        <section id="bot_instruction_container">
+          <section id="instruction_headline">
+            <p id="instruction_headline_text">Use Reminder Bot to:</p>
+          </section>
+          <section id="instruction_list_content">
+            <ul id="instructions">
+              <li id="instruction">Set reminders from the chat UI</li>
+              <li id="instruction">Set reminders from the chat UI</li>
+              <li id="instruction">Set reminders from the chat UI</li>
+              <li id="instruction">Set reminders from the chat UI</li>
+              <li id="instruction">Set reminders from the chat UI</li>
+            </ul>
+          </section>
+        </section>
+        <section id="bot_chat_container">
+          <form action="" id="bot_chat_form">
+            <input type="text" id="bot_chat_input" />
+            <button id="submit_bot_command" type="submit">
+              <img src="./assets/images/sent.png" alt="" />
+            </button>
+          </form>
+        </section>
+      </section>
+      <div id="vertical_divider"></div>
+      <section id="bot_info_activity_container">
+        <section id="bot_activity_headline">
+          <!-- <p id="bot_activity_title">Activity logs</p> -->
+        </section>
+        <section id="bot_activities"></section>
+      </section>
+    </main>
+    <noscript
+      >Your browser does not support javascript, the application won't work as
+      expected</noscript
+    >
     <script>
-      const botSocket = io('http://localhost:3000', {
-        query: {
-          isBot: true,
-        },
-      });
+      // const botSocket = io('http://localhost:3000', {
+      //   query: {
+      //     isBot: true,
+      //   },
+      // });
 
-      const text = document.getElementById('text');
-      const timeStamp = document.getElementById('timeStamp');
-      const bot_name_el = document.getElementById('bot_id_name');
-      const bot_label = document.getElementById('bot_label');
-      const bot_img = document.getElementById('bot_image');
-      const wave_emo = '👋';
+      // const text = document.getElementById('text');
+      // const timeStamp = document.getElementById('timeStamp');
+      // const bot_name_el = document.getElementById('bot_id_name');
+      // const bot_label = document.getElementById('bot_label');
+      // const bot_img = document.getElementById('bot_image');
+      // const wave_emo = '👋';
 
-      botSocket.on('account:signup', (payload) => {
-        bot_name_el.innerHTML = 'Alexabot';
-        bot_img.src = './assets/images/bot.png';
-        bot_img.style.display = 'block';
-        bot_label.innerHTML = 'BOT';
-        text.innerHTML = `${wave_emo} ${payload.username}, welcome to Amazona.`;
-        timeStamp.innerHTML = payload.createdAt;
-      });
+      // botSocket.on('account:signup', (payload) => {
+      //   bot_name_el.innerHTML = 'Alexabot';
+      //   bot_img.src = './assets/images/bot.png';
+      //   bot_img.style.display = 'block';
+      //   bot_label.innerHTML = 'BOT';
+      //   text.innerHTML = `${wave_emo} ${payload.username}, welcome to Amazona.`;
+      //   timeStamp.innerHTML = payload.createdAt;
+      // });
 
       // const notification = io('http://localhost:3000', {});
+
+      // Detect if device is online?
+      function isDeviceOnline() {
+        return navigator.onLine;
+      }
     </script>
   </body>
 </html>
