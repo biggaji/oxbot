@@ -100,6 +100,58 @@ app.post('/reminders', async (req, res, next) => {
         next(error);
     }
 });
+app.get('/reminders', async (req, res, next) => {
+    try {
+        const { filterBy } = req.query;
+        console.log(filterBy);
+        // filterBy: "today" \ "tomorrow"
+        let filterByDate;
+        const todayDate = new Date();
+        // Set it to the start of today
+        todayDate.setHours(0, 0, 0, 0);
+        const tomorrowDate = new Date(todayDate);
+        tomorrowDate.setDate(todayDate.getDate() + 1);
+        if (filterBy === 'today') {
+            const remindersForToday = await ReminderModel.find({
+                scheduledFor: {
+                    $gte: todayDate,
+                    $lt: tomorrowDate,
+                },
+            });
+            res.status(200).json(remindersForToday);
+            return;
+        }
+        else {
+            // tomorrow then
+            const remindersForTomorrow = await ReminderModel.find({
+                scheduledFor: {
+                    $gte: tomorrowDate,
+                    $lt: new Date(tomorrowDate.getTime() + 24 * 60 * 60 * 1000),
+                },
+            });
+            res.status(200).json(remindersForTomorrow);
+            return;
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+// Update a reminder in the future
+app.patch('/reminders/:id', async (req, res, next) => { });
+// Delete one reminder
+app.delete('/reminders/:id', async (req, res, next) => { });
+// Delete all reminder
+app.delete('/reminders', async (req, res, next) => { });
+// Central error middleware
+app.use((err, req, res, next) => {
+    const message = err.message ? err.message : 'Internal server error';
+    const statusCode = err.code ? err.code : 500;
+    res.status(statusCode).json({
+        message,
+        statusCode,
+    });
+});
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log('Server running on port', PORT);
