@@ -155,10 +155,15 @@ app.get(
     try {
       const { filterBy } = req.query;
 
+      console.log(filterBy);
       // filterBy: "today" \ "tomorrow"
 
       let filterByDate: Date;
       const todayDate = new Date();
+
+      // Set it to the start of today
+      todayDate.setHours(0, 0, 0, 0);
+
       const tomorrowDate = new Date(todayDate);
       tomorrowDate.setDate(todayDate.getDate() + 1);
 

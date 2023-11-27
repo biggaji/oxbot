@@ -103,9 +103,12 @@ app.post('/reminders', async (req, res, next) => {
 app.get('/reminders', async (req, res, next) => {
     try {
         const { filterBy } = req.query;
+        console.log(filterBy);
         // filterBy: "today" \ "tomorrow"
         let filterByDate;
         const todayDate = new Date();
+        // Set it to the start of today
+        todayDate.setHours(0, 0, 0, 0);
         const tomorrowDate = new Date(todayDate);
         tomorrowDate.setDate(todayDate.getDate() + 1);
         if (filterBy === 'today') {
