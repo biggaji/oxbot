@@ -159,6 +159,17 @@ app.get(
       // filterBy: "today" || "tomorrow"
       const { filterBy } = req.query;
 
+      if (!filterBy) {
+        throw new Error('Provide a valid filterBy is required');
+      }
+
+      const allowedQueryParam = ['today', 'tomorrow'];
+      if (!allowedQueryParam.includes(filterBy as string)) {
+        throw new Error(
+          "Invalid filterBy query, use either 'today' or 'tomorrow' ",
+        );
+      }
+
       const todayDate = new Date();
 
       // Set it to the start of today 00:00
@@ -276,12 +287,13 @@ app.delete(
         return;
       }
 
-      await ReminderModel.deleteOne({ _id: reminderId });
-      res.status(204).json({
-        success: true,
-        message: 'Reminder deleted',
+      await ReminderModel.deleteOne({
+        _id: reminderId,
       });
+
+      res.status(204).json({});
     } catch (error) {
+      console.log(error);
       next(error);
     }
   },
@@ -293,12 +305,8 @@ app.delete(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // TODO: Implement logic to delete only reminders created by a user
-
       await ReminderModel.deleteMany({});
-      res.status(204).json({
-        success: true,
-        message: 'All reminders deleted',
-      });
+      res.status(204).json({});
     } catch (error) {
       next(error);
     }

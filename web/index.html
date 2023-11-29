@@ -230,6 +230,7 @@
       expected</noscript
     >
     <script>
+      const BASE_API_ENDPOINT = 'http://localhost:3000/reminders';
       const botSocket = io('http://localhost:3000', {
         query: {
           isBot: true,
@@ -379,7 +380,7 @@
           return await fetch(url, {
             method,
             headers: requestHeaders,
-            body: JSON.stringify(payload),
+            body: method === 'GET' ? undefined : stringify(payload),
           });
         } catch (error) {
           throw new Error(
@@ -387,6 +388,23 @@
           );
         }
       }
+
+      // fetch reminders
+      const reminders = async (timelIne) => {
+        if (!timelIne) {
+          throw new Error('Reminder timeline is required');
+        }
+
+        const response = await makeRequest(
+          `${BASE_API_ENDPOINT}?filterBy=${timelIne}`,
+        );
+
+        if (response.ok) {
+          return await response.json();
+        } else {
+          return response.statusText;
+        }
+      };
     </script>
   </body>
 </html>
