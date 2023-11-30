@@ -1,2 +1,2 @@
 # oxbot
-A bot that performs actions based on events
+A simple reminder bot
