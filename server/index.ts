@@ -142,7 +142,10 @@ app.post(
       }
 
       // Return 200 for acknowledgemnt
-      res.status(200).json({});
+      res.status(200).json({
+        success: true,
+        message: 'Reminder set',
+      });
     } catch (error) {
       next(error);
     }
@@ -153,15 +156,12 @@ app.get(
   '/reminders',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // filterBy: "today" || "tomorrow"
       const { filterBy } = req.query;
 
-      console.log(filterBy);
-      // filterBy: "today" \ "tomorrow"
-
-      let filterByDate: Date;
       const todayDate = new Date();
 
-      // Set it to the start of today
+      // Set it to the start of today 00:00
       todayDate.setHours(0, 0, 0, 0);
 
       const tomorrowDate = new Date(todayDate);
@@ -175,7 +175,11 @@ app.get(
           },
         });
 
-        res.status(200).json(remindersForToday);
+        res.status(200).json({
+          success: true,
+          message: 'Reminder for today fetched',
+          reminders: remindersForToday,
+        });
         return;
       } else {
         // tomorrow then
@@ -185,7 +189,11 @@ app.get(
             $lt: new Date(tomorrowDate.getTime() + 24 * 60 * 60 * 1000),
           },
         });
-        res.status(200).json(remindersForTomorrow);
+        res.status(200).json({
+          success: true,
+          message: 'Reminder for tomorrow fetched',
+          reminders: remindersForTomorrow,
+        });
         return;
       }
     } catch (error) {
@@ -196,20 +204,105 @@ app.get(
 
 // Update a reminder in the future
 app.patch(
-  '/reminders/:id',
-  async (req: Request, res: Response, next: NextFunction) => {},
+  '/reminders/:reminderId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { reminderId } = req.params;
+      const { description, scheduledTime } = req.body;
+
+      if (!reminderId) {
+        throw new Error(
+          'Reminder id is required to update a specific reminder data',
+        );
+      }
+
+      const existingReminder = await ReminderModel.findById(reminderId);
+
+      if (!existingReminder) {
+        res.status(404).json({
+          success: false,
+          message: 'Reminder not found',
+        });
+        return;
+      }
+
+      // Only update reminders in the future
+      if (description) {
+        existingReminder.description = description;
+      }
+
+      if (scheduledTime && new Date(scheduledTime) > new Date()) {
+        existingReminder.scheduledFor = new Date(scheduledTime);
+      } else {
+        res.status(400).json({
+          success: false,
+          message: 'Only reminders in the future can be modified',
+        });
+        return;
+      }
+
+      await existingReminder.save();
+
+      res.status(200).json({
+        success: true,
+        message: 'Reminder updated',
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 );
 
 // Delete one reminder
 app.delete(
-  '/reminders/:id',
-  async (req: Request, res: Response, next: NextFunction) => {},
+  '/reminders/:reminderId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { reminderId } = req.params;
+
+      if (!reminderId) {
+        throw new Error(
+          'Reminder id is required to delete a specific reminder data',
+        );
+      }
+
+      const existingReminder = await ReminderModel.findById(reminderId);
+
+      if (!existingReminder) {
+        res.status(404).json({
+          success: false,
+          message: 'Reminder not found',
+        });
+        return;
+      }
+
+      await ReminderModel.deleteOne({ _id: reminderId });
+      res.status(204).json({
+        success: true,
+        message: 'Reminder deleted',
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 );
 
 // Delete all reminder
 app.delete(
   '/reminders',
-  async (req: Request, res: Response, next: NextFunction) => {},
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // TODO: Implement logic to delete only reminders created by a user
+
+      await ReminderModel.deleteMany({});
+      res.status(204).json({
+        success: true,
+        message: 'All reminders deleted',
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 );
 
 // Central error middleware
