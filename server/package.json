@@ -20,12 +20,12 @@
     "@types/mongoose": "5.11.97",
     "cors": "2.8.5",
     "dayjs": "1.11.10",
-    "express": "4.19.2",
+    "express": "4.21.2",
     "luxon": "3.4.4",
     "mongoose": "8.0.1",
     "node-cron": "3.0.3",
     "node-json-db": "2.3.0",
-    "socket.io": "4.7.2",
+    "socket.io": "4.8.1",
     "uuid": "9.0.1"
   },
   "devDependencies": {
