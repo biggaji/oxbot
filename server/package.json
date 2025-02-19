@@ -43,7 +43,7 @@
     "@types/uuid": "9.0.7",
     "chai": "4.3.10",
     "dotenv": "16.3.1",
-    "mocha": "10.2.0",
+    "mocha": "10.8.2",
     "nodemon": "3.0.1",
     "supertest": "6.3.3",
     "ts-node": "10.9.1",
